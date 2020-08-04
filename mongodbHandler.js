@@ -2,8 +2,6 @@ const fs = require('fs');
 const https = require('https');
 
 const { MongoClient } = require('mongodb');
-const qs = require('querystring');
-const url = require('url');
 
 const { certificate, keyfile } = require('./sslconfig');
 const { username, password, clusterUrl } = require('./dbconfig');
@@ -52,7 +50,7 @@ async function postData(client, data, done) {
 
         done.statusCode = 200;
         let message = 'Atteptemed to add ' + data.expression + ' result: ' + JSON.stringify(result);
-        done.message = { body: message };
+        done.data = { body: message };
     } catch (error) {
         done.statusCode = 400;
         done.data = error;
@@ -94,7 +92,6 @@ let server = https.createServer( options, async function (request, response) {
 
             request.on('end', function () {
                 resolveCallback(JSON.parse(requestData));
-                console.log('data parsed: ' + JSON.stringify(parseData));
             });
 
             await parseData;
