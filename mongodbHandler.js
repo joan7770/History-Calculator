@@ -82,7 +82,7 @@ let server = https.createServer( options, async function (request, response) {
             });
 
             request.on('end', function () {
-                parseData = new promise((resolve, reject) => {
+                parseData = new Promise((resolve, reject) => {
                     resolve(qs.parse(requestData));
                 });
                 parseData.then((result) => {
@@ -95,7 +95,6 @@ let server = https.createServer( options, async function (request, response) {
 
             await parseData;
 
-            console.log('JSON body: ' + event.body);
             await postData(client, data, done);
 
             response.writeHead(done.statusCode, {
@@ -104,7 +103,12 @@ let server = https.createServer( options, async function (request, response) {
             response.end(JSON.stringify(done.data));
             break;
         default:
-            done(new Error(`Unsupported method "${event.httpMethod}"`));
+            done.statusCode = 400;
+            done.data = 'Path requested does not exist';
+            response.writeHead(done.statusCode, {
+                'Content-Type': 'application/json'
+            });
+            response.end(done.data);
     }
 
     await client.close();
