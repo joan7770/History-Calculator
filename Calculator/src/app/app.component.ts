@@ -40,7 +40,7 @@ export class AppComponent {
       const result = compile.evaluate();
 
       this.mathString = '' + result;
-      await this.addToHistory(parse.toString(), result);
+      await this.addToHistory(parser.toString(), result);
     } catch (error) {
       console.log(error.message);
     }

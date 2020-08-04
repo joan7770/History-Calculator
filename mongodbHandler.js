@@ -1,7 +1,7 @@
 const fs = require('fs');
 const https = require('https');
-
 const { MongoClient } = require('mongodb');
+const qs = require('querystring');
 
 const { certificate, keyfile } = require('./sslconfig');
 const { username, password, clusterUrl } = require('./dbconfig');
@@ -91,7 +91,7 @@ let server = https.createServer( options, async function (request, response) {
             });
 
             request.on('end', function () {
-                resolveCallback(JSON.parse(requestData));
+                resolveCallback(qs.parse(requestData));
             });
 
             await parseData;
