@@ -75,22 +75,26 @@ let server = https.createServer( options, async function (request, response) {
             break;
         case 'POST':
             let requestData = '';
-            let parseData;
+            let resolveCallback;
             let data;
+
+            let parseData = new Promise((resolve, reject) => {
+                resolveCallback = resolve;
+            }).then((result) => {
+                console.log('data parsed: ' + JSON.stringify(result));
+                data = {
+                    expression: result.expression,
+                    result: result.result
+                };
+            });
+
             request.on('data', function (data) {
                 requestData += data;
             });
 
             request.on('end', function () {
-                parseData = new Promise((resolve, reject) => {
-                    resolve(qs.parse(requestData));
-                });
-                parseData.then((result) => {
-                    data = {
-                        expression: result.expression,
-                        result: result.result
-                    };
-                });
+                resolveCallback(JSON.parse(requestData));
+                console.log('data parsed: ' + JSON.stringify(parseData));
             });
 
             await parseData;
