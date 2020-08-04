@@ -1,5 +1,6 @@
 const fs = require('fs');
-const { https } = require('https');
+const https = require('https');
+
 const { MongoClient } = require('mongodb');
 const qs = require('querystring');
 const url = require('url');
