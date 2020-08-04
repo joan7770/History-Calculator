@@ -46,19 +46,17 @@ export class AppComponent {
     }
   }
 
-  async addToHistory(expression, result) {
+  async addToHistory(exp, res) {
     // POST to AWS for updating MongoDB
     let data = {
-      expression: expression,
-      result: result
+      expression: exp,
+      result: res
     }
     let hostname = window.location.hostname;
     let url = 'https://' + hostname + '/api';
     var jqxhr = await $.post(url, data, function () {
       console.log('Sending: ' + data);
-    },"json").done(function () {
-        
-    }).fail(function (jqxhr, textStatus, error) {
+    },"json").fail(function (jqxhr, textStatus, error) {
        console.log("Request Failed: " + textStatus + ", " + error);
     });
 
