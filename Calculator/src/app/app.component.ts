@@ -53,7 +53,7 @@ export class AppComponent {
       result: result
     }
     let hostname = window.location.hostname;
-    let url = 'https://' + hostname + ':8080/';
+    let url = 'https://' + hostname + '/api';
     var jqxhr = await $.post(url, data, function () {
       console.log('Sending: ' + data);
     },"json").done(function () {
@@ -77,7 +77,7 @@ export class AppComponent {
 
     // GET from AWS
     let hostname = window.location.hostname;
-    let url = 'https://' + hostname + ':8080/';
+    let url = 'https://' + hostname + '/api';
     let jqxhr = await $.getJSON(url, function (data) {
       
     }).fail(function (jqxhr, textStatus, error) {
