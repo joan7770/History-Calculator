@@ -18,6 +18,10 @@ export class AppComponent {
     this.mathString = '';
     this.reset();
     this.refreshData();
+    setInterval(() => {
+      this.reset();
+      this.refreshData();
+    },4000);
   }
 
   clear() {
@@ -47,7 +51,7 @@ export class AppComponent {
   }
 
   async addToHistory(exp, res) {
-    // POST to AWS for updating MongoDB
+    // POST to RSET api to get from MongoDB
     let data = {
       expression: exp,
       result: res
@@ -73,7 +77,7 @@ export class AppComponent {
   async refreshData() {
     let history = [];
 
-    // GET from AWS
+    // GET RSET api from MongoDB
     let hostname = window.location.hostname;
     let url = 'https://' + hostname + '/api';
     let jqxhr = await $.getJSON(url, function (data) {
@@ -90,8 +94,6 @@ export class AppComponent {
       });
     });
 
-    console.log('history: ');
-    console.log(JSON.stringify(history));
     this.resolve!(history);
   }
 }
