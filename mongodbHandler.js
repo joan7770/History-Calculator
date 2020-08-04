@@ -1,7 +1,13 @@
+const fs = require('fs');
+const { https } = require('https');
 const { MongoClient } = require('mongodb');
-const { username, password, clusterUrl } = require('../dbconfig');
+const qs = require('querystring');
+const url = require('url');
+
+const { username, password, clusterUrl } = require('./dbconfig');
 const uri = 'mongodb+srv://' + username + ':' + password + clusterUrl +'?retryWrites=true&w=majority';
 
+const port = 8080;
 
 async function getData(client, done){
     try {
@@ -23,10 +29,12 @@ async function getData(client, done){
                 result: data.result
             });
         }
-        done(null, history);
+        done.statusCode = 200;
+        done.data = history;
     } catch (error) {
         console.log(error.message);
-        done({ message: error.message }, null);
+        done.statusCode = 400;
+        done.data = error;
     }
 }
 
@@ -36,43 +44,58 @@ async function postData(client, data, done) {
         const collection = await client.db().collection('calculator');
         const result = await collection.insertOne(data);
 
+        done.statusCode = 200;
         let message = 'Atteptemed to add ' + data.expression + ' result: ' + JSON.stringify(result);
-        done(null, {body: message});
+        done.message = { body: message };
     } catch (error) {
-        console.log(error.message);
-        done({ message: error.message }, null);
+        done.statusCode = 400;
+        done.data = error;
     }
 }
 
-exports.mongodbHandler = async (event, context, callback) => {
-    console.log(`Recieved ${event.httpMethod} request`);
-    const done = (err, res) => callback(null, {
-        statusCode: err ? '400' : '200',
-        body: err ? err.message : JSON.stringify(res),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+let server = https.createServer( async function (request, response) {
+    console.log(`Recieved ${request.method} request`);
+    let done = {};
 
     const client = new MongoClient(uri, { useNewUrlParser: true });
-    
 
-    switch (event.httpMethod) {
+    switch (request.method) {
         case 'GET':
-            await getData(client,done);
+            await getData(client, done);
+            response.writeHead(done.statusCode, {
+                'Content-Type': 'application/json'
+            });
+            response.end(JSON.stringify(done.data));
             break;
         case 'POST':
-            let body = await JSON.parse(event.body);
+            let requestData = '';
+            let parseData;
+            request.on('data', function (data) {
+                requestData += data;
+            });
+
+            request.on('end', function () {
+                parseData = qs.parse(requestData);
+            });
+
             let data = {
-                expression: body.expression,
-                result: body.result
+                expression: parseData.expression,
+                result: parseData.result
             };
+
             console.log('JSON body: ' + event.body);
             await postData(client, data, done);
+
+            response.writeHead(done.statusCode, {
+                'Content-Type': 'application/json'
+            });
+            response.end(JSON.stringify(done.data));
             break;
         default:
             done(new Error(`Unsupported method "${event.httpMethod}"`));
     }
 
     await client.close();
-};
+});
+
+server.listen(8080);
