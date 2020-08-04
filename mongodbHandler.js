@@ -76,18 +76,24 @@ let server = https.createServer( options, async function (request, response) {
         case 'POST':
             let requestData = '';
             let parseData;
+            let data;
             request.on('data', function (data) {
                 requestData += data;
             });
 
             request.on('end', function () {
-                parseData = qs.parse(requestData);
+                parseData = new promise((resolve, reject) => {
+                    resolve(qs.parse(requestData));
+                });
+                parseData.then((result) => {
+                    data = {
+                        expression: result.expression,
+                        result: result.result
+                    };
+                });
             });
 
-            let data = {
-                expression: parseData.expression,
-                result: parseData.result
-            };
+            await parseData;
 
             console.log('JSON body: ' + event.body);
             await postData(client, data, done);
