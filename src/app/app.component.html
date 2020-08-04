@@ -1,0 +1,79 @@
+<section class="bg-primary text-white pattern">
+  <div class="container pt-10">
+    <div class="row mb-2">
+      <div class="col-md-8 col-lg-5">
+        <div class="input-group mb-1">
+          <input type="text" id="userText" class="form-control px-3" placeholder="1+2" aria-label="Enter math" maxlength="64" value="{{mathString}}" disabled>
+          <div class="input-group-append">
+            <button class="btn btn-danger" type="button" (click)="backspace()">Backspace</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><button class="btn btn-rounded btn-danger" type="button" (click)="clear()">C</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('(')" class="btn btn-dribbble btn-rounded">(</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString(')')" class="btn btn-dribbble btn-rounded">)</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('/')" class="btn btn-warning btn-rounded">/</button></li>
+          </ol>
+        </nav>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('7')" class="btn btn-dribbble btn-rounded">7</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('8')" class="btn btn-dribbble btn-rounded">8</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('9')" class="btn btn-dribbble btn-rounded">9</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('*')" class="btn btn-warning btn-rounded">*</button></li>
+          </ol>
+        </nav>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('4')" class="btn btn-dribbble btn-rounded">4</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('5')" class="btn btn-dribbble btn-rounded">5</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('6')" class="btn btn-dribbble btn-rounded">6</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('-')" class="btn btn-warning btn-rounded">-</button></li>
+          </ol>
+        </nav>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('1')" class="btn btn-dribbble btn-rounded">1</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('2')" class="btn btn-dribbble btn-rounded">2</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('3')" class="btn btn-dribbble btn-rounded">3</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('+')" class="btn btn-warning btn-rounded">+</button></li>
+          </ol>
+        </nav>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('.')" class="btn btn-dribbble btn-rounded">.</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('0')" class="btn btn-dribbble btn-rounded">0</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="appendMathString('^')" class="btn btn-dribbble btn-rounded">^</button></li>
+            <li class="breadcrumb-item"><button type="button" (click)="evaluateEquation()" class="btn btn-success btn-rounded">=</button></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4>History</h4>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div *ngIf="(historyData|async) as data; else loadingHistory">
+      <app-mat-table [tableData]="data" [tableColumns]="tableCols"></app-mat-table>
+    </div>
+  </div>
+  <ng-template #loadingHistory>
+    <h4>Loading History</h4>
+  </ng-template>
+</section>
+
+
+<router-outlet></router-outlet>

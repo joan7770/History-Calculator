@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Calculator</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script>
+      function redirectToProperPage(){
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      };
+      redirectToProperPage();
+    </script>
+  </head>
+  <body>
+    <header class="header-sticky header-dark">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+          <a href="index.html" class="navbar-brand">Calculator</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="burger"><span></span></span></button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav align-items-center mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="https://github.com/joan7770/joan7770.github.io/tree/master/calculator">Github Source</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <app-root></app-root>
+  </body>
+</html>

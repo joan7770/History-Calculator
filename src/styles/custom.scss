@@ -1,0 +1,14 @@
+// variable overrides
+$enable-shadows: true;
+
+@import "../../node_modules/bootstrap/scss/functions";
+
+// Go Theme Varibles
+@import "Go/assets/scss/_variables.scss";
+@import "Go/assets/scss/_variables-custom.scss";
+
+// Bootstrap core
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+//Go Theme main scss
+@import "Go/assets/scss/style.scss";
