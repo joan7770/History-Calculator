@@ -4,10 +4,15 @@ const { MongoClient } = require('mongodb');
 const qs = require('querystring');
 const url = require('url');
 
+const { certificate, keyfile } = require('./sslconfig');
 const { username, password, clusterUrl } = require('./dbconfig');
 const uri = 'mongodb+srv://' + username + ':' + password + clusterUrl +'?retryWrites=true&w=majority';
 
 const port = 8080;
+const options = {
+    key: fs.readFileSync(keyfile),
+    cert: fs.readFileSync(certificate)
+};
 
 async function getData(client, done){
     try {
@@ -53,7 +58,7 @@ async function postData(client, data, done) {
     }
 }
 
-let server = https.createServer( async function (request, response) {
+let server = https.createServer( options, async function (request, response) {
     console.log(`Recieved ${request.method} request`);
     let done = {};
 

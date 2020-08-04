@@ -42,7 +42,7 @@ export class AppComponent {
       this.mathString = '' + result;
       await this.addToHistory(parse.toString(), result);
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   }
 
@@ -52,7 +52,9 @@ export class AppComponent {
       expression: expression,
       result: result
     }
-    var jqxhr = await $.post("https://brh7zy5qv2.execute-api.us-east-1.amazonaws.com/prod", data, function () {
+    let hostname = window.location.hostname;
+    let url = 'https://' + hostname + ':8080/';
+    var jqxhr = await $.post(url, data, function () {
       console.log('Sending: ' + data);
     },"json").done(function () {
         
@@ -74,7 +76,9 @@ export class AppComponent {
     let history = [];
 
     // GET from AWS
-    let jqxhr = await $.getJSON("https://brh7zy5qv2.execute-api.us-east-1.amazonaws.com/prod", function (data) {
+    let hostname = window.location.hostname;
+    let url = 'https://' + hostname + ':8080/';
+    let jqxhr = await $.getJSON(url, function (data) {
       
     }).fail(function (jqxhr, textStatus, error) {
       history.push({
